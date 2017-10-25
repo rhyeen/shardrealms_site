@@ -1,0 +1,21 @@
+{
+  "extends": ["eslint:recommended", "google"],
+  "env": {
+    "browser": true,
+    "node": true,
+    "mocha": true,
+    "jquery": true
+  },
+  "globals": {
+    "angular": true,
+    "Promise": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "script"
+  },
+  "rules": {
+    "require-jsdoc":"off",
+    "max-len": ["error", 120]
+  }
+}

@@ -1,0 +1,10 @@
+node_modules/*
+dist
+tmp
+npm-debug.log
+coverage
+.npm
+.config
+.idea
+.pm2*
+.bash*

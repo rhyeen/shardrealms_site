@@ -1,0 +1,42 @@
+{
+  "name": "shardrealms-web",
+  "version": "1.0.0",
+  "description": "SR Creation Landing Web Server",
+  "license": "GPL-3.0",
+  "author": "Ryan Saunders",
+  "scripts": {
+    "dev": "nodemon src/server/bin/run.js",
+    "start": "node src/server/bin/run.js",
+    "lint": "node_modules/.bin/eslint src",
+    "lint-fix": "node_modules/.bin/eslint src --fix",
+    "test": "npm run test-routes",
+    "test-routes": "istanbul cover _mocha -- --colors --recursive src/server/routes/**/*.spec.js",
+    "test-healthcheck": "istanbul cover _mocha -- --colors --recursive src/server/routes/healthcheck/*.spec.js",
+    "test-integration": "istanbul cover _mocha -- --colors --recursive src/server/routes/routes/**/integration-test.js",
+    "test-coverage": "npm run test && npm run _test-coverage",
+    "_test-coverage": "istanbul check-coverage --statements 75 --recursive"
+  },
+  "engines": {
+    "node": ">8.0.0"
+  },
+  "dependencies": {
+    "body-parser": "~1.15.0",
+    "bunyan": "^1.8.5",
+    "bunyan-prettystream": "^0.1.3",
+    "cookie-parser": "~1.4.1",
+    "express": "~4.13.4",
+    "morgan": "^1.7.0",
+    "mysql": "^2.13.0"
+  },
+  "devDependencies": {
+    "assert": "^1.3.0",
+    "eslint": "^3.13.1",
+    "eslint-config-google": "^0.7.1",
+    "istanbul": "^0.4.2",
+    "mocha": "^2.4.5",
+    "nodemon": "^1.11.0",
+    "sinon": "~1.17.3",
+    "supertest": "^1.2.0",
+    "supertest-session": "^2.0.1"
+  }
+}
