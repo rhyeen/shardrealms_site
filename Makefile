@@ -32,9 +32,9 @@ run-local: rm
 	$(IMG):$(TAG) npm run dev
 
 run-prod: rm
-	docker run -d $(RUNOPTS) \
+	docker run -d -p 80:80 \
 	--name $(CONTAINER) \
-	-e ENVIRONMENT=dev \
+	-e ENVIRONMENT=prod \
 	--restart on-error:5 \
 	$(IMG):$(TAG) npm start
 
