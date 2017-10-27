@@ -35,7 +35,7 @@ run-prod: rm
 	docker run -d -p 80:80 \
 	--name $(CONTAINER) \
 	-e ENVIRONMENT=prod \
-	--restart on-error:5 \
+	--restart on-failure:5 \
 	$(IMG):$(TAG) npm start
 
 push:
