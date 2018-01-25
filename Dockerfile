@@ -24,7 +24,7 @@ COPY . /home/default
 
 # Expose port
 EXPOSE 80
-ENV EXPRESS_PORT=80
+ENV EXPRESS_PORT=8080
 
 ## Set env vars
 # Not secret

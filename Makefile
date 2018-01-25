@@ -10,7 +10,7 @@ MOUNT_TO=/home/default
 
 IMG=sr_creation/$(IMG_NAME)
 CONTAINER=$(IMG_NAME)
-RUNOPTS=-p $(PORT):80 -p $(SSL_PORT):443
+RUNOPTS=-p $(PORT):8080 -p $(SSL_PORT):443
 
 build:
 	(rm -rf node_modules || true) && \
@@ -33,13 +33,22 @@ run-local: rm
 	$(IMG):$(TAG) npm run dev
 
 run-prod: rm
-	docker run -d -p $(PORT):80 \
+	docker run -d -p 80:8080 \
 	-p 443:443 \
 	--name $(CONTAINER) \
 	-e ENVIRONMENT=prod \
 	--env-file $(MOUNT_FROM)/src/private/envvars/env.list \
 	--restart on-failure:5 \
 	$(IMG):$(TAG) npm start
+
+run-prod-enter: rm
+	docker run -it -p 80:8080 \
+	-p 443:443 \
+	--name $(CONTAINER) \
+	-e ENVIRONMENT=prod \
+	--env-file $(MOUNT_FROM)/src/private/envvars/env.list \
+	-v $(MOUNT_FROM):$(MOUNT_TO) \
+	$(IMG):$(TAG) /bin/bash
 
 push:
 	docker push $(IMG):$(TAG)
