@@ -37,7 +37,7 @@ run-prod: rm
 	-p 443:443 \
 	--name $(CONTAINER) \
 	-e ENVIRONMENT=prod \
-	--env-file $(MOUNT_FROM)/src/private/envvars/env.list
+	--env-file $(MOUNT_FROM)/src/private/envvars/env.list \
 	--restart on-failure:5 \
 	$(IMG):$(TAG) npm start
 
