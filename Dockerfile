@@ -28,9 +28,13 @@ ENV EXPRESS_PORT=80
 
 ## Set env vars
 # Not secret
-
+ENV MYSQL_HOST 'shardrealms.com'
+ENV MYSQL_USER 'sr_creation_dev'
+ENV MYSQL_DATABASE 'sr_creation_dev'
+ENV MYSQL_PORT '3306'
 
 # Secret
+ENV MYSQL_PASSWORD 'not_password'
 
 
 # Default command to run for non-dev environments
