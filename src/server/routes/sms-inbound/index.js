@@ -8,4 +8,4 @@ module.exports = router;
 
 router.route(basepath + '/sms/inbound')
   .all(auth.validateRequest)
-  .post(controller.createInboundMessage);
+  .get(controller.createInboundMessage);

@@ -8,3 +8,6 @@ coverage
 .idea
 .pm2*
 .bash*
+
+src/private/cert/*
+src/private/envvars/*
