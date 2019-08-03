@@ -80,17 +80,20 @@
     let showSymbolCipherKeyboard = false;
     let showVampyricAlphabetKeyboard = false;
 
-    function get_all_shifts(phrase) {
+    function getAllShifts(phrase) {
       const shifts = [];
       let next_phrase = phrase;
       for (let i = 0; i < 26; i++) {
-        next_phrase = shift_phrase(next_phrase);
         shifts.push(next_phrase);
+        next_phrase = shift_phrase(next_phrase);
       }
       return shifts;
     }
 
     function shift_phrase(phrase) {
+      if (!phrase || phrase.length === 0) {
+        return "";
+      }
       const next_phrase_chars = [];
       phraseSplit = phrase.split();
       for (let i = 0; i < phrase.length; i++) {
@@ -103,13 +106,13 @@
       return next_phrase_chars.join("");
     }
 
-    function get_numbers(letter_phrase) {
+    function getLettersFromNumbers(numberPhrase) {
       const next_phrase_chars = [];
-      letter_phrase.forEach(i => {
+      numberPhrase.forEach(i => {
         if (i == " ") {
           next_phrase_chars.push(" ");
         } else {
-          next_phrase_chars.push(letter_number_map[i]);
+          next_phrase_chars.push(letter_number_map[parseInt(i)-1]);
         }
       });
       return next_phrase_chars.join("");
@@ -145,13 +148,13 @@
 
     function decodeLetters() {
       let encodedMessage = document.getElementById("cipherInput").value;
-      decodedMessages = get_all_shifts(encodedMessage);
+      decodedMessages = getAllShifts(encodedMessage);
       handleDecodeOutput(encodedMessage, decodedMessages);
     }
 
     function decodeNumbers() {
       let encodedMessage = document.getElementById("cipherInput").value;
-      decodedMessages = get_all_shifts(get_numbers(encodedMessage.split(' ')));
+      decodedMessages = getAllShifts(getLettersFromNumbers(encodedMessage.split(' ')));
       handleDecodeOutput(encodedMessage, decodedMessages);
     }
 
@@ -188,6 +191,44 @@
 
     function inputCipherSymbol(symbolLetter) {
       document.getElementById("cipherInput").value += symbolLetter;
+    }
+
+    function combineNumbers(arr) {
+      finalArr = [];
+      for (let i = 0; i < arr.length; i++) {
+        if (!isNaN(arr[i])) {
+          if (i+1 < arr.length && !isNaN(arr[i+1])) {
+            finalArr.push(arr[i]+arr[i+1]);
+            i = i + 1;
+          } else {
+            finalArr.push(arr[i]);
+          }
+        } else {
+          finalArr.push(arr[i]);
+        }
+      }
+      return finalArr;
+    }
+
+    function forceToLetters(arr) {
+      finalArr = [];
+      for (let i = 0; i < arr.length; i++) {
+        if (!isNaN(arr[i])) {
+          finalArr.push(getLettersFromNumbers([arr[i]])[0]);
+        } else {
+          finalArr.push(arr[i]);
+        }
+      }
+      return finalArr;
+    }
+
+    function decodeCombination() {
+      let encodedMessage = document.getElementById("cipherInput").value;
+      let encodedCharacters = encodedMessage.split('');
+      encodedCharacters = combineNumbers(encodedCharacters);
+      encodedCharacters = forceToLetters(encodedCharacters);
+      decodedMessages = getAllShifts(encodedCharacters.join(""));
+      handleDecodeOutput(encodedMessage, decodedMessages);
     }
   </script>
 </head>
@@ -283,14 +324,17 @@
       </table>
     </div>
     <br>
-    <p>Letters can be entered as-is.  Numbers should be separated by spaces.</p>
+    <p>Letters can be entered as-is, then "Decode Letters".  Numbers should be separated by spaces, then "Decode Numbers".  You can mix letters/symbols and numbers (no spaces) if they are mixed in one word, then "Decode Combination".</p>
     <p>For example, try:</p>
     <ul>
-      <li>Input: "lslclu aoyll", then click "Decode Letters" and look at result #19</li>
-      <li>Input: "17 15 18 2", then click "Decode Numbers" and look at result #2</li>
+      <li>Input: "jgnnq yqtnf", then click "Decode Letters" and look at result #25</li>
+      <li>Input: "17 15 18 2", then click "Decode Numbers" and look at result #4</li>
+      <li>Input: "b18h9r", then click "Decode Combination" and look at result #X</li>
     </ul>
     <button onclick="decodeLetters()">Decode Letters</button>
     <button onclick="decodeNumbers()">Decode Numbers</button>
+    <!-- works, but no cipher uses it yet -->
+    <!-- <button onclick="decodeCombination()">Decode Combination</button> -->
     <button onclick="clearInput()">Clear</button>
     <div id="decodedMessages"></div>
   </div>
