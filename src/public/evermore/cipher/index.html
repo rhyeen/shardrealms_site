@@ -1,0 +1,175 @@
+<html>
+<head>
+  <style type="text/css"></style>
+  <meta charset="UTF-8">
+  <title>Evermore - Cipher Decoder</title>
+  <!-- So devices see it the way I expect them to -->
+  <meta name="viewport" content="width=device-width">
+  <meta name="description" content="Shardrealms is an open source, community driven tabletop RPG experience.">
+  <meta name="author" content="Shardrealms team">
+  <link rel="stylesheet" type="text/css" href="styles/main.css">
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-75013605-4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-75013605-4');
+
+    shift_map = {
+      'a': 'b',
+      'b': 'c',
+      'c': 'd',
+      'd': 'e',
+      'e': 'f',
+      'f': 'g',
+      'g': 'h',
+      'h': 'i',
+      'i': 'j',
+      'j': 'k',
+      'k': 'l',
+      'l': 'm',
+      'm': 'n',
+      'n': 'o',
+      'o': 'p',
+      'p': 'q',
+      'q': 'r',
+      'r': 's',
+      's': 't',
+      't': 'u',
+      'u': 'v',
+      'v': 'w',
+      'w': 'x',
+      'x': 'y',
+      'y': 'z',
+      'z': 'a'
+    };
+
+    letter_number_map = [
+      'a',
+      'b',
+      'c',
+      'd',
+      'e',
+      'f',
+      'g',
+      'h',
+      'i',
+      'j',
+      'k',
+      'l',
+      'm',
+      'n',
+      'o',
+      'p',
+      'q',
+      'r',
+      's',
+      't',
+      'u',
+      'v',
+      'w',
+      'x',
+      'y',
+      'z'
+    ];
+
+    let decodedMessages = [];
+
+    function get_all_shifts(phrase) {
+      const shifts = [];
+      let next_phrase = phrase;
+      for (let i = 0; i < 26; i++) {
+        next_phrase = shift_phrase(next_phrase);
+        shifts.push(next_phrase);
+      }
+      return shifts;
+    }
+
+    function shift_phrase(phrase) {
+      const next_phrase_chars = [];
+      phraseSplit = phrase.split();
+      for (let i = 0; i < phrase.length; i++) {
+        if (phrase.charAt(i) == " ") {
+          next_phrase_chars.push(" ");
+        } else {
+          next_phrase_chars.push(shift_map[phrase.charAt(i)]);
+        }
+      }
+      return next_phrase_chars.join("");
+    }
+
+    function get_numbers(letter_phrase) {
+      const next_phrase_chars = [];
+      letter_phrase.forEach(i => {
+        if (i == " ") {
+          next_phrase_chars.push(" ");
+        } else {
+          next_phrase_chars.push(letter_number_map[i]);
+        }
+      });
+      return next_phrase_chars.join("");
+    }
+    
+    function removeAllChildElementsFromElementById(parentId) {
+      let el = document.getElementById(parentId);
+      let child = el.lastElementChild;  
+      while (child) { 
+          el.removeChild(child); 
+          child = el.lastElementChild; 
+      }
+    }
+
+    function buildListWithinElementById(parentId, arr) {
+      let ul = document.createElement('ol');
+      // ul.setAttribute('id','decodedMessagesList');
+      document.getElementById(parentId).appendChild(ul);
+      arr.forEach(element => {
+        let li = document.createElement('li');
+        ul.appendChild(li);
+        li.innerHTML = li.innerHTML + element;
+      });
+    }
+
+    function handleDecodeOutput(encodedMessage, decodedMessages) {
+      console.log(encodedMessage);
+      console.log(JSON.stringify(decodedMessages));
+
+      removeAllChildElementsFromElementById('decodedMessages');
+      buildListWithinElementById('decodedMessages', decodedMessages);
+    }
+
+    function decodeLetters() {
+      let encodedMessage = document.getElementById("cipherInput").value;
+      decodedMessages = get_all_shifts(encodedMessage);
+      handleDecodeOutput(encodedMessage, decodedMessages);
+    }
+
+    function decodeNumbers() {
+      let encodedMessage = document.getElementById("cipherInput").value;
+      decodedMessages = get_all_shifts(get_numbers(encodedMessage.split(' ')));
+      handleDecodeOutput(encodedMessage, decodedMessages);
+    }
+
+    function clearInput() {
+      document.getElementById("cipherInput").value = "";
+      decodeLetters();
+    }
+  </script>
+</head>
+<body>
+  <div class="main-container">
+    <h1>Evermore Cipher</h1>
+    <label>
+      Input Encoded Message (scrambled letters or numbers): <input id="cipherInput">
+    </label>
+    <div>Letters can be entered as-is.  Numbers should be separated by spaces</div>
+    <div>For example, try: "lslclu aoyll" or "17 15 18 2"</div>
+    <button onclick="decodeLetters()">Decode Letters</button>
+    <button onclick="decodeNumbers()">Decode Numbers</button>
+    <button onclick="clearInput()">Clear</button>
+    <div id="decodedMessages"></div>
+  </div>
+</body>
+</html>

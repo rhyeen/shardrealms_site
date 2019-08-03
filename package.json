@@ -14,7 +14,8 @@
     "test-healthcheck": "istanbul cover _mocha -- --colors --recursive src/server/routes/healthcheck/*.spec.js",
     "test-integration": "istanbul cover _mocha -- --colors --recursive src/server/routes/routes/**/integration-test.js",
     "test-coverage": "npm run test && npm run _test-coverage",
-    "_test-coverage": "istanbul check-coverage --statements 75 --recursive"
+    "_test-coverage": "istanbul check-coverage --statements 75 --recursive",
+    "serve": "serve"
   },
   "engines": {
     "node": ">8.0.0"
@@ -37,6 +38,7 @@
     "istanbul": "^0.4.2",
     "mocha": "^2.4.5",
     "nodemon": "^1.11.0",
+    "serve": "^11.1.0",
     "sinon": "~1.17.3",
     "supertest": "^1.2.0",
     "supertest-session": "^2.0.1"
