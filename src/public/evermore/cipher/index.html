@@ -78,6 +78,7 @@
     let decodedMessages = [];
 
     let showSymbolCipherKeyboard = false;
+    let showVampyricAlphabetKeyboard = false;
 
     function get_all_shifts(phrase) {
       const shifts = [];
@@ -164,9 +165,24 @@
       if (showSymbolCipherKeyboard) {
         document.getElementById("symbolCipherKeyboard").style.display = "block";
         document.getElementById("symbolCipherKeyboardBtn").innerText = "Hide Symbol Cipher Keyboard";
+        showVampyricAlphabetKeyboard = true;
+        toggleVampyricAlphabetKeyboard();
       } else {
         document.getElementById("symbolCipherKeyboard").style.display = "none";
         document.getElementById("symbolCipherKeyboardBtn").innerText = "Show Symbol Cipher Keyboard";
+      }
+    }
+
+    function toggleVampyricAlphabetKeyboard() {
+      showVampyricAlphabetKeyboard = !showVampyricAlphabetKeyboard;
+      if (showVampyricAlphabetKeyboard) {
+        document.getElementById("vampyricAlphabetKeyboard").style.display = "block";
+        document.getElementById("vampyricAlphabetKeyboardBtn").innerText = "Hide Vampyric Alphabet Keyboard";
+        showSymbolCipherKeyboard = true;
+        toggleSymbolCipherKeyboard();
+      } else {
+        document.getElementById("vampyricAlphabetKeyboard").style.display = "none";
+        document.getElementById("vampyricAlphabetKeyboardBtn").innerText = "Show Vampyric Alphabet Keyboard";
       }
     }
 
@@ -183,6 +199,7 @@
     </label>
     <br>
     <button id="symbolCipherKeyboardBtn" onclick="toggleSymbolCipherKeyboard()">Show Symbol Cipher Keyboard</button>
+    <button id="vampyricAlphabetKeyboardBtn" onclick="toggleVampyricAlphabetKeyboard()">Show Vampyric Alphabet Keyboard</button>
     <div id="symbolCipherKeyboard" style="display:none">
       <p>If the message is encoded with the cipher symbols, use the keyboard below to type the decoded letter into the input above.</p>
       <table class="keyboard-table">
@@ -224,6 +241,47 @@
         </tr>
       </table>
     </div>
+    <div id="vampyricAlphabetKeyboard" style="display:none">
+      <p>If the message is encoded with the vampyric letters, use the keyboard below to type the decoded letter into the input above.</p>
+      <table class="keyboard-table">
+        <tr>
+          <td><button onclick="inputCipherSymbol('a')"><img src="vampyric_alphabet/a.png"></button></td>
+          <td><button onclick="inputCipherSymbol('b')"><img src="vampyric_alphabet/b.png"></button></td>
+          <td><button onclick="inputCipherSymbol('c')"><img src="vampyric_alphabet/c.png"></button></td>
+          <td><button onclick="inputCipherSymbol('d')"><img src="vampyric_alphabet/d.png"></button></td>
+          <td><button onclick="inputCipherSymbol('e')"><img src="vampyric_alphabet/e.png"></button></td>
+          <td><button onclick="inputCipherSymbol('f')"><img src="vampyric_alphabet/f.png"></button></td>
+        </tr>
+        <tr>
+          <td><button onclick="inputCipherSymbol('g')"><img src="vampyric_alphabet/g.png"></button></td>
+          <td><button onclick="inputCipherSymbol('h')"><img src="vampyric_alphabet/h.png"></button></td>
+          <td><button onclick="inputCipherSymbol('i')"><img src="vampyric_alphabet/i.png"></button></td>
+          <td><button onclick="inputCipherSymbol('j')" disabled><img src="vampyric_alphabet/j.png"></button></td>
+          <td><button onclick="inputCipherSymbol('k')"><img src="vampyric_alphabet/k.png"></button></td>
+          <td><button onclick="inputCipherSymbol('l')"><img src="vampyric_alphabet/l.png"></button></td>
+        </tr>
+        <tr>
+          <td><button onclick="inputCipherSymbol('m')"><img src="vampyric_alphabet/m.png"></button></td>
+          <td><button onclick="inputCipherSymbol('n')"><img src="vampyric_alphabet/n.png"></button></td>
+          <td><button onclick="inputCipherSymbol('o')"><img src="vampyric_alphabet/o.png"></button></td>
+          <td><button onclick="inputCipherSymbol('p')"><img src="vampyric_alphabet/p.png"></button></td>
+          <td><button onclick="inputCipherSymbol('q')" disabled><img src="vampyric_alphabet/q.png"></button></td>
+          <td><button onclick="inputCipherSymbol('r')"><img src="vampyric_alphabet/r.png"></button></td>
+        </tr>
+        <tr>
+          <td><button onclick="inputCipherSymbol('s')"><img src="vampyric_alphabet/s.png"></button></td>
+          <td><button onclick="inputCipherSymbol('t')"><img src="vampyric_alphabet/t.png"></button></td>
+          <td><button onclick="inputCipherSymbol('u')"><img src="vampyric_alphabet/u.png"></button></td>
+          <td><button onclick="inputCipherSymbol('v')"><img src="vampyric_alphabet/v.png"></button></td>
+          <td><button onclick="inputCipherSymbol('w')"><img src="vampyric_alphabet/w.png"></button></td>
+          <td><button onclick="inputCipherSymbol('x')" disabled><img src="vampyric_alphabet/x.png"></button></td>
+        </tr>
+        <tr>
+          <td><button onclick="inputCipherSymbol('y')"><img src="vampyric_alphabet/y.png"></button></td>
+          <td><button onclick="inputCipherSymbol('z')"><img src="vampyric_alphabet/z.png"></button></td>
+        </tr>
+      </table>
+    </div>
     <br>
     <p>Letters can be entered as-is.  Numbers should be separated by spaces.</p>
     <p>For example, try:</p>
@@ -236,5 +294,8 @@
     <button onclick="clearInput()">Clear</button>
     <div id="decodedMessages"></div>
   </div>
+  <script>
+    clearInput();
+  </script>
 </body>
 </html>
