@@ -77,6 +77,8 @@
 
     let decodedMessages = [];
 
+    let showSymbolCipherKeyboard = false;
+
     function get_all_shifts(phrase) {
       const shifts = [];
       let next_phrase = phrase;
@@ -156,6 +158,21 @@
       document.getElementById("cipherInput").value = "";
       decodeLetters();
     }
+
+    function toggleSymbolCipherKeyboard() {
+      showSymbolCipherKeyboard = !showSymbolCipherKeyboard;
+      if (showSymbolCipherKeyboard) {
+        document.getElementById("symbolCipherKeyboard").style.display = "block";
+        document.getElementById("symbolCipherKeyboardBtn").innerText = "Hide Symbol Cipher Keyboard";
+      } else {
+        document.getElementById("symbolCipherKeyboard").style.display = "none";
+        document.getElementById("symbolCipherKeyboardBtn").innerText = "Show Symbol Cipher Keyboard";
+      }
+    }
+
+    function inputCipherSymbol(symbolLetter) {
+      document.getElementById("cipherInput").value += symbolLetter;
+    }
   </script>
 </head>
 <body>
@@ -164,8 +181,52 @@
     <label>
       Input Encoded Message (scrambled letters or numbers): <input id="cipherInput">
     </label>
-    <div>Letters can be entered as-is.  Numbers should be separated by spaces</div>
-    <div>For example, try:</div>
+    <br>
+    <button id="symbolCipherKeyboardBtn" onclick="toggleSymbolCipherKeyboard()">Show Symbol Cipher Keyboard</button>
+    <div id="symbolCipherKeyboard" style="display:none">
+      <p>If the message is encoded with the cipher symbols, use the keyboard below to type the decoded letter into the input above.</p>
+      <table class="keyboard-table">
+        <tr>
+          <td><button onclick="inputCipherSymbol('a')"><img src="cipher_symbols/a.png"></button></td>
+          <td><button onclick="inputCipherSymbol('b')"><img src="cipher_symbols/b.png"></button></td>
+          <td><button onclick="inputCipherSymbol('c')"><img src="cipher_symbols/c.png"></button></td>
+          <td><button onclick="inputCipherSymbol('d')"><img src="cipher_symbols/d.png"></button></td>
+          <td><button onclick="inputCipherSymbol('e')"><img src="cipher_symbols/e.png"></button></td>
+          <td><button onclick="inputCipherSymbol('f')"><img src="cipher_symbols/f.png"></button></td>
+        </tr>
+        <tr>
+          <td><button onclick="inputCipherSymbol('g')"><img src="cipher_symbols/g.png"></button></td>
+          <td><button onclick="inputCipherSymbol('h')"><img src="cipher_symbols/h.png"></button></td>
+          <td><button onclick="inputCipherSymbol('i')"><img src="cipher_symbols/i.png"></button></td>
+          <td><button onclick="inputCipherSymbol('j')"><img src="cipher_symbols/j.png"></button></td>
+          <td><button onclick="inputCipherSymbol('k')"><img src="cipher_symbols/k.png"></button></td>
+          <td><button onclick="inputCipherSymbol('l')"><img src="cipher_symbols/l.png"></button></td>
+        </tr>
+        <tr>
+          <td><button onclick="inputCipherSymbol('m')"><img src="cipher_symbols/m.png"></button></td>
+          <td><button onclick="inputCipherSymbol('n')"><img src="cipher_symbols/n.png"></button></td>
+          <td><button onclick="inputCipherSymbol('o')"><img src="cipher_symbols/o.png"></button></td>
+          <td><button onclick="inputCipherSymbol('p')"><img src="cipher_symbols/p.png"></button></td>
+          <td><button onclick="inputCipherSymbol('q')"><img src="cipher_symbols/q.png"></button></td>
+          <td><button onclick="inputCipherSymbol('r')"><img src="cipher_symbols/r.png"></button></td>
+        </tr>
+        <tr>
+          <td><button onclick="inputCipherSymbol('s')"><img src="cipher_symbols/s.png"></button></td>
+          <td><button onclick="inputCipherSymbol('t')"><img src="cipher_symbols/t.png"></button></td>
+          <td><button onclick="inputCipherSymbol('u')"><img src="cipher_symbols/u.png"></button></td>
+          <td><button onclick="inputCipherSymbol('v')"><img src="cipher_symbols/v.png"></button></td>
+          <td><button onclick="inputCipherSymbol('w')"><img src="cipher_symbols/w.png"></button></td>
+          <td><button onclick="inputCipherSymbol('x')"><img src="cipher_symbols/x.png"></button></td>
+        </tr>
+        <tr>
+          <td><button onclick="inputCipherSymbol('y')"><img src="cipher_symbols/y.png"></button></td>
+          <td><button onclick="inputCipherSymbol('z')"><img src="cipher_symbols/z.png"></button></td>
+        </tr>
+      </table>
+    </div>
+    <br>
+    <p>Letters can be entered as-is.  Numbers should be separated by spaces.</p>
+    <p>For example, try:</p>
     <ul>
       <li>Input: "lslclu aoyll", then click "Decode Letters" and look at result #19</li>
       <li>Input: "17 15 18 2", then click "Decode Numbers" and look at result #2</li>
