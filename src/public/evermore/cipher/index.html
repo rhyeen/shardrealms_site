@@ -84,7 +84,6 @@
     let showVampyricAlphabetKeyboard = false;
 
     function decode() {
-      debugger;
       let encodedMessage = document.getElementById("cipherInput").value.toLowerCase();
       let lettersArray = [];
       let numbersArray = [];
@@ -122,7 +121,6 @@
         return findShiftsAndBuildMixedWords(letterShifts, numberShifts);
       } else {
         letterShift = findShift(letterShifts);
-        debugger;
         numberShift = findShift(numberShifts);
         return combine(letterShifts[letterShift], numberShifts[numberShift]);
       }
@@ -130,22 +128,25 @@
 
     function findShift(shifts) {
       let words;
-      let letterShift = -1;
+      let highestWordCount = 0;
+      let currentWordCount;
+      let letterShift = 0;
       for (let i = 0; i < shifts.length; i++) {
+        currentWordCount = 0;
         words = shifts[i].split(' ');
         words.forEach(word => {
-          if (word.charAt(0) !== '_' && word.length > 2) {
+          if (word.charAt(0) !== '_') {
             if (wordList.has(word)) {
-              letterShift = i;
+              currentWordCount++;
             }
           }
         });
-        if (letterShift >= 0) {
-          // break;
-          return letterShift;
+        if (currentWordCount > highestWordCount) {
+          highestWordCount = currentWordCount;
+          letterShift = i;
         }
       }
-      // return letterShift;
+      return letterShift;
     }
 
     function findShiftsAndBuildMixedWords(letterShifts, numberShifts) {
@@ -219,7 +220,7 @@
       let next_phrase = phrase;
       for (let i = 0; i < 26; i++) {
         shifts.push(next_phrase);
-        next_phrase = shift_phrase(next_phrase);
+        next_phrase = shift_phrase(next_phrase).replace(/  +/g, ' ');
       }
       return shifts;
     }
@@ -243,7 +244,7 @@
     function getLettersFromNumbers(numberPhrase) {
       const next_phrase_chars = [];
       numberPhrase.forEach(i => {
-        if (i == " ") {
+        if (i == "") {
           next_phrase_chars.push(" ");
         } else if (i == "_") {
           next_phrase_chars.push("_");
@@ -265,7 +266,6 @@
 
     function buildListWithinElementById(parentId, arr) {
       let ul = document.createElement('ol');
-      // ul.setAttribute('id','decodedMessagesList'); //@TODO: Needed?
       document.getElementById(parentId).appendChild(ul);
       arr.forEach(element => {
         let li = document.createElement('li');
