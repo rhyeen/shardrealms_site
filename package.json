@@ -9,7 +9,6 @@
     "start": "node src/server/bin/run.js",
     "lint": "node_modules/.bin/eslint src",
     "lint-fix": "node_modules/.bin/eslint src --fix",
-    "test": "npm run test-routes",
     "test-routes": "istanbul cover _mocha -- --colors --recursive src/server/routes/**/*.spec.js",
     "test-healthcheck": "istanbul cover _mocha -- --colors --recursive src/server/routes/healthcheck/*.spec.js",
     "test-integration": "istanbul cover _mocha -- --colors --recursive src/server/routes/routes/**/integration-test.js",
