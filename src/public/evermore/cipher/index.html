@@ -10,7 +10,6 @@
   <link rel="stylesheet" type="text/css" href="styles/main.css">
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-75013605-4"></script>
-  <script src="index.js"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
@@ -86,6 +85,7 @@
 
     function decode() {
       let encodedMessage = document.getElementById("cipherInput").value.toLowerCase();
+      encodedMessage = encodedMessage.replace(/\|\|/g, '  ');
       let lettersArray = [];
       let numbersArray = [];
       split(encodedMessage, lettersArray, numbersArray);
@@ -95,7 +95,7 @@
         letters = lettersArray.join("");
       }
       if (encodedMessage.search(/[0-9]/) >= 0) {
-        numbers = numbersArray.join(" ");
+        numbers = numbersArray.join("");
       }
       let letterShifts = [];
       let numberShifts = [];
@@ -103,12 +103,12 @@
         letterShifts = getAllShifts(letters);
       }
       if (numbers.length > 0) {
-        numberShifts = getAllShifts(getLettersFromNumbers(numbers.split(' ')));
+        numberShifts = getAllShifts(numbers);
       }
       let decodedMessage = findDecodedMessage(letterShifts, numberShifts);
       handleOutput(encodedMessage, decodedMessage, letterShifts, numberShifts);
     }
-
+    
     function findDecodedMessage(letterShifts, numberShifts) {
       let letterShift;
       let numberShift;
@@ -118,12 +118,16 @@
       } else if (numberShifts.length === 0) {
         letterShift = findShift(letterShifts);
         return letterShifts[letterShift];
-      } else if (letterShifts[0].indexOf('_') >= 0 && numberShifts.indexOf('_') >= 0) {
-        return findShiftsAndBuildMixedWords(letterShifts, numberShifts);
       } else {
-        letterShift = findShift(letterShifts);
-        numberShift = findShift(numberShifts);
-        return combine(letterShifts[letterShift], numberShifts[numberShift]);
+        let letterWordOne = letterShifts[0].split(' ')[0];
+        let numberWordOne = numberShifts[0].split(' ')[0];
+        if (letterWordOne.indexOf('_') >= 0 && numberWordOne.indexOf('_') >= 0) {
+          return findShiftsAndBuildMixedWords(letterShifts, numberShifts);
+        } else {
+          letterShift = findShift(letterShifts);
+          numberShift = findShift(numberShifts);
+          return combine(letterShifts[letterShift], numberShifts[numberShift]);
+        }
       }
     }
 
@@ -133,15 +137,7 @@
       let currentWordCount;
       let letterShift = 0;
       for (let i = 0; i < shifts.length; i++) {
-        currentWordCount = 0;
-        words = shifts[i].split(' ');
-        words.forEach(word => {
-          if (word.charAt(0) !== '_') {
-            if (wordList.has(word)) {
-              currentWordCount++;
-            }
-          }
-        });
+        currentWordCount = countWords(shifts[i]);
         if (currentWordCount > highestWordCount) {
           highestWordCount = currentWordCount;
           letterShift = i;
@@ -150,8 +146,39 @@
       return letterShift;
     }
 
+    function countWords(phrase) {
+      let words = phrase.split(' ');
+      let wordCount = 0;
+      words.forEach(word => {
+        if (word.charAt !== '_') {
+          if (wordList.has(word)) {
+            wordCount++;
+          }
+        }
+      });
+      return wordCount;
+    }
+ 
     function findShiftsAndBuildMixedWords(letterShifts, numberShifts) {
-
+      let highestWordCount = -1;
+      let highestLetterIndex = 0;
+      let highestNumberIndex = 0;
+      let currentWordCount = 0;
+      let highestPhrase, currentPhrase;
+      debugger;
+      for (let letterIndex = 0; letterIndex < letterShifts.length; letterIndex++) {
+        for (let numberIndex = 0; numberIndex < numberShifts.length; numberIndex++) {
+          currentPhrase = combine(letterShifts[letterIndex], numberShifts[numberIndex]);
+          currentWordCount = countWords(currentPhrase);
+          if (currentWordCount > highestWordCount) {
+            highestWordCount = currentWordCount;
+            highestLetterIndex = letterIndex;
+            highestNumberIndex = numberIndex;
+            highestPhrase = currentPhrase;
+          }
+        }
+      }
+      return highestPhrase;
     }
 
     function combine(letterPhrase, numberPhrase) {
@@ -191,7 +218,7 @@
           numbersArray[i] = charArray[i];
           lettersArray[i] = charArray[i];
         } else if (charArray[i] >= '1' && charArray[i] <= '9' || charArray[i].length > 1) {
-          numbersArray[i] = charArray[i];
+          numbersArray[i] = getLetterFromNumber(charArray[i]);
           lettersArray[i] = '_';
         } else {
           lettersArray[i] = charArray[i];
@@ -218,7 +245,7 @@
 
     function getAllShifts(phrase) {
       const shifts = [];
-      let next_phrase = phrase;
+      let next_phrase = phrase.replace(/  +/g, ' ');
       for (let i = 0; i < 26; i++) {
         shifts.push(next_phrase);
         next_phrase = shift_phrase(next_phrase).replace(/  +/g, ' ');
@@ -242,18 +269,12 @@
       return next_phrase_chars.join("");
     }
 
-    function getLettersFromNumbers(numberPhrase) {
-      const next_phrase_chars = [];
-      numberPhrase.forEach(i => {
-        if (i == "") {
-          next_phrase_chars.push(" ");
-        } else if (i == "_") {
-          next_phrase_chars.push("_");
-        } else {
-          next_phrase_chars.push(letter_number_map[parseInt(i)-1]);
-        }
-      });
-      return next_phrase_chars.join("");
+    function getLetterFromNumber(number) {
+      if (number == "_") {
+        return "_";
+      } else {
+        return letter_number_map[parseInt(number)-1];
+      }
     }
 
     function removeAllChildElementsFromElementById(parentId) {
@@ -330,44 +351,6 @@
 
     function inputCipherSymbol(symbolLetter) {
       document.getElementById("cipherInput").value += symbolLetter;
-    }
-
-    function combineNumbers(arr) {
-      finalArr = [];
-      for (let i = 0; i < arr.length; i++) {
-        if (!isNaN(arr[i])) {
-          if (i+1 < arr.length && !isNaN(arr[i+1])) {
-            finalArr.push(arr[i]+arr[i+1]);
-            i = i + 1;
-          } else {
-            finalArr.push(arr[i]);
-          }
-        } else {
-          finalArr.push(arr[i]);
-        }
-      }
-      return finalArr;
-    }
-
-    function forceToLetters(arr) {
-      finalArr = [];
-      for (let i = 0; i < arr.length; i++) {
-        if (!isNaN(arr[i])) {
-          finalArr.push(getLettersFromNumbers([arr[i]])[0]);
-        } else {
-          finalArr.push(arr[i]);
-        }
-      }
-      return finalArr;
-    }
-
-    function decodeCombination() {
-      let encodedMessage = document.getElementById("cipherInput").value;
-      let encodedCharacters = encodedMessage.split('');
-      encodedCharacters = combineNumbers(encodedCharacters);
-      encodedCharacters = forceToLetters(encodedCharacters);
-      decodedMessages = getAllShifts(encodedCharacters.join(""));
-      handleDecodeOutput(encodedMessage, decodedMessages);
     }
   </script>
 </head>
@@ -469,11 +452,8 @@
     <ul>
       <li>Input: "jgnnq yqtnf", then click "Decode Letters" and look at result #25</li>
       <li>Input: "17 15 18 2", then click "Decode Numbers" and look at result #4</li>
-      <!-- <li>Input: "b18h9r", then click "Decode Combination" and look at result #X</li> -->
     </ul>
     <button onclick="decode()">Decode Message</button>
-    <!-- works, but no cipher uses it yet -->
-    <!-- <button onclick="decodeCombination()">Decode Combination</button> -->
     <button onclick="clearInput()">Clear</button>
     <div id="decodedMessage"></div>
     <div id="letterShifts"></div>
