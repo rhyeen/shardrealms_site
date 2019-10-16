@@ -123,3 +123,7 @@ input {
   padding: 0 5px;
 }
 
+.character-btn {
+  width: 45px;
+  height: 45px;
+}
